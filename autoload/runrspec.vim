@@ -151,7 +151,19 @@ function! s:do_rspec(full_cmd)
   let s:result_window_number = winnr()
 
   " run rspec
-  if has('nvim')
+  if has('channel')
+    let job = job_start(a:full_cmd, {
+          \ 'out_io': 'buffer',
+          \ 'out_name': s:result_buffer,
+          \ 'out_modifiable': 0,
+          \ 'err_io': 'buffer',
+          \ 'err_name': s:result_buffer,
+          \ 'err_modifiable': 0
+          \ })
+    silent setlocal nobuflisted
+    silent execute 'resize' g:run_rspec_result_lines
+    execute ':normal i' . 'Running spec...'
+  elseif has('nvim')
     let job = job_start(a:full_cmd, {
           \ 'out_io': 'buffer',
           \ 'out_name': s:result_buffer,
