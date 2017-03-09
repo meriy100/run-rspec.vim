@@ -149,32 +149,12 @@ function! s:do_rspec(full_cmd)
   silent setlocal buftype=nofile
   silent setlocal syntax=rspecresult
   let s:result_window_number = winnr()
-
   " run rspec
-  if has('channel')
-    let job = job_start(a:full_cmd, {
-          \ 'out_io': 'buffer',
-          \ 'out_name': s:result_buffer,
-          \ 'out_modifiable': 0,
-          \ 'err_io': 'buffer',
-          \ 'err_name': s:result_buffer,
-          \ 'err_modifiable': 0
-          \ })
+  if has('nvim')
+    execute termopen(a:full_cmd)
     silent setlocal nobuflisted
     silent execute 'resize' g:run_rspec_result_lines
-    execute ':normal i' . 'Running spec...'
-  elseif has('nvim')
-    let job = job_start(a:full_cmd, {
-          \ 'out_io': 'buffer',
-          \ 'out_name': s:result_buffer,
-          \ 'out_modifiable': 0,
-          \ 'err_io': 'buffer',
-          \ 'err_name': s:result_buffer,
-          \ 'err_modifiable': 0
-          \ })
-    silent setlocal nobuflisted
-    silent execute 'resize' g:run_rspec_result_lines
-    execute ':normal i' . 'Running spec...'
+    " execute ':normal i' . 'Running spec...'
   else
     silent execute 'r!' a:full_cmd
     silent setlocal nobuflisted nomodifiable readonly
@@ -257,4 +237,15 @@ endfunction
 
 function! s:show_info(message)
   echo '[run-rspec] ' . a:message
+endfunction
+
+function! s:JobHandler(job_id, data, event)
+    if a:event == 'stdout'
+        silent execute 'edit' s:result_buffer
+        execute ':normal i' . join(a:data, "\n")
+        for l:line in a:data
+        endfor
+    elseif a:event == 'stderr'
+    else
+    endif
 endfunction
