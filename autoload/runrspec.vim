@@ -151,7 +151,7 @@ function! s:do_rspec(full_cmd)
   let s:result_window_number = winnr()
 
   " run rspec
-  if has('channel')
+  if has('nvim')
     let job = job_start(a:full_cmd, {
           \ 'out_io': 'buffer',
           \ 'out_name': s:result_buffer,
