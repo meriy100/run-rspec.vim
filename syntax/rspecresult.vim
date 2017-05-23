@@ -27,7 +27,7 @@ highlight rspecFailureSpec ctermfg=Red guifg=Red
 " Spec file
 "
 syntax match rspecFile /\S*_spec\.rb:[0-9]\+/
-highlight rspecFile ctermfg=93 cterm=underline guifg=Purple gui=underline
+highlight rspecFile ctermfg=Red cterm=underline guifg=Purple gui=underline
 
 "
 " Summary
